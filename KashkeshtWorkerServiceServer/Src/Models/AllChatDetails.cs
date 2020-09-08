@@ -49,9 +49,15 @@ namespace KashkeshtWorkerServiceServer.Src.Models
         {
             var clientFromClients = GetClientByName(clientModel.Name);
             var clientFromChat = GetClientByNameFromChat(clientModel.Name);
-            var clientFromChat2 = chat.GetClient(clientModel.Name);
+            if (chat != null)
+            {
+                var clientFromChat2 = chat.GetClient(clientModel.Name);
+                if (clientFromChat2 != null)
+                {
+                    clientFromChat2.CurrentConnectChat = chat;
+                }
+            }
 
-            clientFromChat2.CurrentConnectChat = chat;
             clientFromClients.CurrentConnectChat = chat;
             clientFromChat.CurrentConnectChat = chat;
         }

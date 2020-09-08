@@ -39,20 +39,13 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
             var allChats = _allChatDetails.GetAllChatThatClientExist(_name);
             foreach (var chat in allChats)
             {
-                /* string members = "";
-                 foreach (var client in chat.Clients)
-                 {
-                     members += $"{client.Name} , ";
-                 }*/
-
+              
                 allChatsMessageModel.Chats.Add(new ChatMessageModel
                 {
                     ChatId = chat.ChatId,
                     Names = chat.GetAllNamesInChat(),
                     ChatType = chat.ChatType
                 });
-
-                //msg += $"{chat.ChatType.ToString()} chat with id : {chat.ChatId} with members : {members} {Environment.NewLine}";
             }
             string msg = Utils.SerlizeObject(allChatsMessageModel);
             _requestHandler.SendData(_allChatDetails.GetClientByName(_name).Client, msg);

@@ -35,7 +35,7 @@ namespace KashkeshtWorkerServiceServer.Src.Factory
             {
                 case "PrivateCreationChat":
                     var request = Utils.DeSerlizeObject<PrivateChatMessageModel>(requestData);
-                    new PrivateChatCreatorOption(Name,_allChatDetails).Operation(request);
+                    new PrivateChatCreatorOption(Name, _allChatDetails).Operation(request);
                     break;
                 case "GetAllChats":
                     new GetAllChatOption(Name, _allChatDetails).Operation(obj);
@@ -53,12 +53,12 @@ namespace KashkeshtWorkerServiceServer.Src.Factory
                     break;
                 case "GetAllUserConnected":
                     var request5 = Utils.DeSerlizeObject<MainRequest>(requestData);
-                    new GetAllUserConnectedOption(Name,_allChatDetails).Operation(request5);
+                    new GetAllUserConnectedOption(Name, _allChatDetails).Operation(request5);
                     break;
-
-                    
-
-
+                case "GroupCreationChat":
+                    var request6 = Utils.DeSerlizeObject<GroupChatMessageModel>(requestData);
+                    new GroupChatCreatorOption(Name, _allChatDetails).Operation(request6);
+                    break;
 
             }
         }
@@ -99,14 +99,14 @@ namespace KashkeshtWorkerServiceServer.Src.Factory
                     return;
                 }
 
-                SendAll(foundChat, request,message);
+                SendAll(foundChat, request, message);
 
                 foundChat.AddMessage(new MessageModel(MessageType.TextMessage, message, clientSneder, DateTime.Now));
                 response = _responseHandler.GetResponse(_allChatDetails.GetClientByName(Name).Client);
             }
         }
 
-        private void SendAll(ChatModule foundChat, InsertToChatMessageModel request , string message) 
+        private void SendAll(ChatModule foundChat, InsertToChatMessageModel request, string message)
         {
             var allUserToSend = GetAllConnectedToSend(foundChat, request);
 

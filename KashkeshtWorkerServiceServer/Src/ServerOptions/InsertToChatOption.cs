@@ -13,6 +13,7 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
 {
     public class InsertToChatOption : IOption
     {
+        private object locker = new object();
         private AllChatDetails _allChatDetails { get; set; }
         private IServerRequestHandler _requestHandler;
         private IServerResponseHandler _responseHandler;
@@ -35,8 +36,11 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
         {
             var data = request as InsertToChatMessageModel;
             var clientSneder = _allChatDetails.GetClientByName(data.From);
-            
-            _allChatDetails.UpdateCurrentChat(clientSneder, chat);
+
+            lock (locker)
+            {
+                _allChatDetails.UpdateCurrentChat(clientSneder, chat);
+            }
 
             var model = new NewChatMessage
             {
@@ -51,17 +55,21 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
                 SendToAll(chat, request, Utils.SerlizeObject(model));
                 model.Message = $"exit";
                 SendToAllExit(chat, request, Utils.SerlizeObject(model));
-                _allChatDetails.UpdateCurrentChat(clientSneder, null);
+
+                lock (locker)
+                {
+                    _allChatDetails.UpdateCurrentChat(clientSneder, null);
+                }
                 return;
             }
 
             SendToAll(chat, request, message);
-            
+
 
             chat.AddMessage(new MessageModel(MessageType.TextMessage, message, clientSneder, DateTime.Now));
-            
+
         }
-        private void SendToAll(ChatModule chat,MainRequest request,string message) 
+        private void SendToAll(ChatModule chat, MainRequest request, string message)
         {
             var allUserToSend = GetAllConnectedToSend(chat, request);
             foreach (var client in allUserToSend)
@@ -98,8 +106,8 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
                     {
                         if (client.CurrentConnectChat.ChatId == chat.ChatId)
                         {
-                             ls.Add(client);
-                            
+                            ls.Add(client);
+
                         }
                     }
 

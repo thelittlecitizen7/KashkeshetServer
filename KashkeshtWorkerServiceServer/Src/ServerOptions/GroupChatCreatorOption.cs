@@ -1,4 +1,6 @@
-﻿using KashkeshtWorkerServiceServer.Src.Models.ChatData;
+﻿using KashkeshtWorkerServiceServer.Src.Enums;
+using KashkeshtWorkerServiceServer.Src.Models;
+using KashkeshtWorkerServiceServer.Src.Models.ChatData;
 using KashkeshtWorkerServiceServer.Src.Models.ChatModel;
 using KashkeshtWorkerServiceServer.Src.Models.ChatsModels;
 using System;
@@ -10,28 +12,42 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
 {
     public class GroupChatCreatorOption : IOption
     {
-        private List<ChatModule> _allChats;
+        private AllChatDetails _allChatDetails;
 
-        private Dictionary<string, TcpClient> _allSockets;
-        public GroupChatCreatorOption(List<ChatModule> allChats, Dictionary<string, TcpClient> allSockets)
+        private string Name { get; set; }
+        public GroupChatCreatorOption(string name, AllChatDetails allChatDetails)
         {
-            _allChats = allChats;
-            _allSockets = allSockets;
+            Name = name;
+            _allChatDetails = allChatDetails;
         }
+
 
         public void Operation(MainRequest chatData)
         {
            var data =  chatData as GroupChatMessageModel;
             ChatModule newGroupChat = new GroupChat(data.GroupName);
+            ClientModel senerClient = _allChatDetails.GetClientByName(Name);
+            
+            List<ClientModel> clients = new List<ClientModel>();
+            clients.Add(senerClient);
+            if (data.lsUsers.Count ==  0) 
+            {
+                return;
+            }
+            newGroupChat.AddClient(senerClient);
             foreach (var clientName in data.lsUsers)
             {
-                if (_allSockets.ContainsKey(clientName))
+                if (_allChatDetails.IsClientExist(clientName))
                 {
-                    ClientModel client = new ClientModel(clientName, _allSockets[clientName]);
+                    ClientModel client = _allChatDetails.GetClientByName(clientName);
+                    clients.Add(client);
                     newGroupChat.AddClient(client);
                 }
             }
-            _allChats.Add(newGroupChat);
+            if (!_allChatDetails.IsExistChatWithSamePeaple(clients, ChatType.Group))
+            {
+                _allChatDetails.AddChat(newGroupChat);
+            }
         }
     }
 }

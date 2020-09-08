@@ -11,7 +11,7 @@ namespace KashkeshtWorkerServiceServer
     {
         public static void Main(string[] args)
         {
-
+            Console.WriteLine("dfgdfgfdgdfdf");
             CreateHostBuilder(args).Build().Run();
         }
 
