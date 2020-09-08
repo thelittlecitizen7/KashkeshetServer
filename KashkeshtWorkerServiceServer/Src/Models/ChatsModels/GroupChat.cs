@@ -1,0 +1,47 @@
+﻿using KashkeshtWorkerServiceServer.Src.Models.ChatModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace KashkeshtWorkerServiceServer.Src.Models.ChatsModels
+{
+    public class GroupChat : ChatModule
+    {
+        public string GroupName { get; set; }
+        public string ChatName { get; set; }
+
+        public List<ClientModel> Managers { get; set; }
+
+        public GroupChat(string groupName) : base(Enums.ChatType.Group)
+        {
+            GroupName = groupName;
+            Managers = new List<ClientModel>();
+        }
+
+        public void ChangeGroupName(string groupName) 
+        {
+            GroupName = groupName;
+        }
+
+        public bool IsClientManager(ClientModel client) 
+        {
+            return Managers.Any(m => m.Name == client.Name);
+        }
+
+        public void AddManager(ClientModel client) 
+        {
+            if (!IsClientManager(client)) 
+            {
+                Managers.Add(client);
+            }
+        }
+        public void RemoveManager(ClientModel client)
+        {
+            if (IsClientManager(client))
+            {
+                Managers.Remove(client);
+            }
+        }
+    }
+}
