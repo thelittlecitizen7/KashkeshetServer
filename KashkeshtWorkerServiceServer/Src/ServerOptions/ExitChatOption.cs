@@ -26,7 +26,6 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions.ManagerOptions
         }
         public void Operation(MainRequest chatData)
         {
-
             var data = chatData as GroupChatMessageModel;
             var groupChat = _allChatDetails.GetGroupByName(data.GroupName);
             var client = _allChatDetails.GetClientByName(Name);
