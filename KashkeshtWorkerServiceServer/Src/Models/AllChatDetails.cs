@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using KashkeshtWorkerServiceServer.Src.Enums;
 using KashkeshtWorkerServiceServer.Src.Models.ChatModel;
+using KashkeshtWorkerServiceServer.Src.Models.ChatsModels;
 
 namespace KashkeshtWorkerServiceServer.Src.Models
 {
@@ -39,6 +40,19 @@ namespace KashkeshtWorkerServiceServer.Src.Models
             }
             return true;
         }
+
+        public GroupChat GetGroupByName(string groupName) 
+        {
+            var allGroupChats = AllChats.Where(c => c.ChatType == ChatType.Group).ToList();
+            return (GroupChat)allGroupChats.FirstOrDefault(g => ((GroupChat)g).GroupName == groupName);
+
+        }
+
+        public bool IsExistChatWithName(string groupName) 
+        {
+            var allGroupChats = AllChats.Where(c => c.ChatType == ChatType.Group).ToList();
+            return allGroupChats.Any(g => ((GroupChat)g).GroupName == groupName);
+        } 
 
         public bool IsClientExist(string name) 
         {

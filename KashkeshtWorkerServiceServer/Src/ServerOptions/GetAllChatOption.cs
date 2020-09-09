@@ -2,6 +2,7 @@
 using KashkeshtWorkerServiceServer.Src.Models;
 using KashkeshtWorkerServiceServer.Src.Models.ChatData;
 using KashkeshtWorkerServiceServer.Src.Models.ChatModel;
+using KashkeshtWorkerServiceServer.Src.Models.ChatsModels;
 using KashkeshtWorkerServiceServer.Src.RequestsHandler;
 using KashkeshtWorkerServiceServer.Src.ResponsesHandler;
 using System;
@@ -39,12 +40,12 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
             var allChats = _allChatDetails.GetAllChatThatClientExist(_name);
             foreach (var chat in allChats)
             {
-              
                 allChatsMessageModel.Chats.Add(new ChatMessageModel
                 {
                     ChatId = chat.ChatId,
                     Names = chat.GetAllNamesInChat(),
-                    ChatType = chat.ChatType
+                    ChatType = chat.ChatType,
+                    GroupName = (chat.GetType() == typeof(GroupChat)) ? ((GroupChat)chat).GroupName : null
                 });
             }
             string msg = Utils.SerlizeObject(allChatsMessageModel);

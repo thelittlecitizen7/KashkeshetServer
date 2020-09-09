@@ -4,6 +4,7 @@ using KashkeshtWorkerServiceServer.Src.Models.ChatModel;
 using KashkeshtWorkerServiceServer.Src.RequestsHandler;
 using KashkeshtWorkerServiceServer.Src.ResponsesHandler;
 using KashkeshtWorkerServiceServer.Src.ServerOptions;
+using KashkeshtWorkerServiceServer.Src.ServerOptions.ManagerOptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,27 @@ namespace KashkeshtWorkerServiceServer.Src.Factory
                     var request6 = Utils.DeSerlizeObject<GroupChatMessageModel>(requestData);
                     new GroupChatCreatorOption(Name, _allChatDetails).Operation(request6);
                     break;
+
+                case "AddUserToChat":
+                    var request7 = Utils.DeSerlizeObject<GroupChatMessageModel>(requestData);
+                    new AddUserToGroupOption(Name, _allChatDetails).Operation(request7);
+                    break;
+                case "RemoveUserToChat":
+                    var request8 = Utils.DeSerlizeObject<GroupChatMessageModel>(requestData);
+                    new RemoveUserFromGroupOption(Name, _allChatDetails).Operation(request8);
+                    break;
+                case "AddAdminPermissions":
+                    var request9 = Utils.DeSerlizeObject<GroupChatMessageModel>(requestData);
+                    new AddAdminPermissionOption(Name, _allChatDetails).Operation(request9);
+                    break;
+                case "RemoveAdminPermissions":
+                    var request10 = Utils.DeSerlizeObject<GroupChatMessageModel>(requestData);
+                    new RemoveAdminPermissionOption(Name, _allChatDetails).Operation(request10);
+                    break;
+                case "ExitChat":
+                    var request11 = Utils.DeSerlizeObject<GroupChatMessageModel>(requestData);
+                    new ExitChatOption(Name, _allChatDetails).Operation(request11);
+                    break;//ExitChat
 
             }
         }

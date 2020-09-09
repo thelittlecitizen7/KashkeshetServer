@@ -33,9 +33,6 @@ namespace KashkeshtWorkerServiceServer.Src.Models.ChatModel
             return Clients.FirstOrDefault(c => c.Name == name);
         }
 
-
-
-
         public void AddClient(ClientModel client)
         {
             if (!IsClientExistInChat(client))
@@ -43,6 +40,7 @@ namespace KashkeshtWorkerServiceServer.Src.Models.ChatModel
                 Clients.Add(client);
             }
         }
+
 
         public List<string> GetAllNamesInChat() 
         {
@@ -55,13 +53,22 @@ namespace KashkeshtWorkerServiceServer.Src.Models.ChatModel
         }
 
 
-        public void RemoveClient(ClientModel client)
+        public virtual void RemoveClient(ClientModel client)
         {
             if (IsClientExistInChat(client))
             {
                 Clients.Remove(client);
             }
         }
+
+        public virtual void RemoveMultiClients(List<ClientModel> clients)
+        {
+            foreach (var client in clients)
+            {
+                RemoveClient(client);
+            }
+        }
+
 
         public bool IsClientExistInChat(ClientModel client)
         {

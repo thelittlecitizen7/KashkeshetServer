@@ -25,7 +25,7 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
         public void Operation(MainRequest chatData)
         {
            var data =  chatData as GroupChatMessageModel;
-            ChatModule newGroupChat = new GroupChat(data.GroupName);
+            GroupChat newGroupChat = new GroupChat(data.GroupName);
             ClientModel senerClient = _allChatDetails.GetClientByName(Name);
             
             List<ClientModel> clients = new List<ClientModel>();
@@ -34,6 +34,7 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
             {
                 return;
             }
+            newGroupChat.AddManager(senerClient);
             newGroupChat.AddClient(senerClient);
             foreach (var clientName in data.lsUsers)
             {
@@ -44,9 +45,11 @@ namespace KashkeshtWorkerServiceServer.Src.ServerOptions
                     newGroupChat.AddClient(client);
                 }
             }
-            if (!_allChatDetails.IsExistChatWithSamePeaple(clients, ChatType.Group))
+
+            if (!_allChatDetails.IsExistChatWithName(data.GroupName)) 
             {
                 _allChatDetails.AddChat(newGroupChat);
+                Console.WriteLine($"Group {data.GroupName} added");
             }
         }
     }
